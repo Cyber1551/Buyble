@@ -1,22 +1,29 @@
 import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import PrivateRoute from './components/PrivateRoute';
+//import PrivateRoute from './components/PrivateRoute';
 import { Layout } from './components/Layout';
-import { Login } from './components/Login';
-import { Register } from './components/Register';
-import { RemindersDashboard } from './components/Reminders/ReminderDashboard';
+//import { Login } from './components/Login';
+//import { Register } from './components/Register';
+import { Home } from './components/Home';
 import './custom.css'
 
 
 export default class App extends Component {
   static displayName = App.name;
 
-  render () {
+  /*constructor()
+  {
+    super();
+
+    Client.SendToServer("post", "connection", "");
+    Client.SendToServer("get", "product/pie")
+  }*/
+  render()
+  {
     return (
       <Layout>
-        <Route exact path='/' component={Login} />
-        <Route path='/register' component={Register} />
-        <Route path='/reminders' component={RemindersDashboard} />
+        <Route exact path='/' component={Home} />
+        
       </Layout>
 
     );
