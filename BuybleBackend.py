@@ -28,38 +28,48 @@ shop = db['shop']
 # pprint.pprint(doc)
 
 
-@app.route("/connection", methods=['POST'])
-def test():
-    return "YEET"
-
-
 @app.route("/insertData", methods=['POST'])
 def data():
     datatoinsert = request.get_data()
     parsed = parseData(datatoinsert)
     print(parsed)
     res = validateProductData(parsed)
-    if res["res"] and get_product(parsed["name"]) is None:
-        insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
-        return "SUCCESS"
+    if res["res"]:
+        check = get_product(parsed["name"])
+        if "res" in check:
+            insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
+            return {
+                "res": True
+            }
+        else:
+            return {
+                "res": False,
+                "info": "Product already exists"
+            }
     else:
-        return res["info"]
+        return {
+            "res": False,
+            "info": res["info"]
+        }
 
 
 @app.route('/product/<string:name>', methods=['GET'])
 def get_product(name):
     query = shop.find_one({"product": name}, {'_id': False})
-    print(query)
-    return query
+    if query is None:
+        return {
+            "res": False,
+            "info": "The product does not exist"
+        }
+    else:
+        return query
 
 
 @app.route("/product/addSales", methods=['POST'])
-def addPurchase(): #productName, quantity):
+def addPurchase():
     data = request.get_data()
-    lst = dict(data.decode('ascii'))
-    productName = arr['product']
-    quantity = arr['quantity']
-    shop.update_one({"product": productName}, {"$inc": {"quantity": quantity}})
+    lst = parseData(data)
+    shop.update_one({"product": lst["name"]}, {"$inc": {"quantity": lst["quantity"]}})
 
 
 def insertPurchase(date, weather, quantity, price, product):
@@ -80,9 +90,11 @@ def delete(docId, collection):
     col.delete_one({"_id": docId})
 
 
+
 def parseData(d):
-    arr = dict(d.decode('ascii'))
-    name = arr["product"]
+    arr = json.loads(d.decode('ascii'))
+
+    name = arr["name"]
     date = arr["date"]
     quantity = arr['quantity']
     price = arr['price']
@@ -101,10 +113,10 @@ def validateProductData(d):
         "info": ""
     }
     values = [
-        validateString(d["name"]),
-        validateInt(d["quantity"]),
         validateFloat(d["price"]),
-        validateDate(d["date"])
+        validateInt(d["quantity"]),
+        validateDate(d["date"]),
+        validateString(d["name"])
     ]
     for val in values:
         if not val["res"]:

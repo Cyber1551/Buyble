@@ -8,8 +8,9 @@ Client.SendToServer = function (method, endpoint, data, callback) {
         dataType: 'text',
         type: method,
         contentType: 'application/x-www-form-urlencoded',
-        data: data,
+        data: JSON.stringify(data, null, 2),
         success: function( data ){
+            data = JSON.parse(data)
             if (callback) callback(data)
         },
         error: function( errorThrown){
