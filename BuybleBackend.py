@@ -39,9 +39,12 @@ def data():
     parsed = parseData(datatoinsert)
     print(parsed)
     res = validateProductData(parsed)
-    if res["res"] and get_product(parsed["name"]) is None:
-        insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
-        return "SUCCESS"
+    if res["res"]:
+        if get_product(parsed["name"]) is None:
+            insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
+            return "SUCCESS"
+        else:
+            return "Product already exists"
     else:
         return res["info"]
 
@@ -56,10 +59,8 @@ def get_product(name):
 @app.route("/product/addSales", methods=['POST'])
 def addPurchase(): #productName, quantity):
     data = request.get_data()
-    lst = dict(data.decode('ascii'))
-    productName = arr['product']
-    quantity = arr['quantity']
-    shop.update_one({"product": productName}, {"$inc": {"quantity": quantity}})
+    lst = parseData(data)
+    shop.update_one({"product": lst["name"]}, {"$inc": {"quantity": lst["quantity"]}})
 
 
 def insertPurchase(date, weather, quantity, price, product):
@@ -81,8 +82,9 @@ def delete(docId, collection):
 
 
 def parseData(d):
-    arr = dict(d.decode('ascii'))
-    name = arr["product"]
+    arr = json.loads(d.decode('ascii'))
+
+    name = arr["name"]
     date = arr["date"]
     quantity = arr['quantity']
     price = arr['price']
@@ -101,10 +103,10 @@ def validateProductData(d):
         "info": ""
     }
     values = [
-        validateString(d["name"]),
-        validateInt(d["quantity"]),
         validateFloat(d["price"]),
-        validateDate(d["date"])
+        validateInt(d["quantity"]),
+        validateDate(d["date"]),
+        validateString(d["name"])
     ]
     for val in values:
         if not val["res"]:
