@@ -77,7 +77,10 @@ def addPurchase(name):
 @app.route('/product_list', methods=['POST'])
 def getProductList():
     prods = shop.distinct("product")
-    return jsonify("info"=prods)
+    dic = {}
+    for prod in prods:
+        dic[prod] = shop.find_one({'product':prod})['quantity']
+    return jsonify("info"=dic)
 
 
 @app.route('/login', methods=['POST'])
