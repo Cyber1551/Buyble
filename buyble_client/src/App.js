@@ -5,7 +5,7 @@ import { Layout } from './components/Layout';
 //import { Login } from './components/Login';
 //import { Register } from './components/Register';
 import { Home } from './components/Home';
-import './custom.css'
+
 
 
 export default class App extends Component {
