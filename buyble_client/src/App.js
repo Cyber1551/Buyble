@@ -4,12 +4,13 @@ import './App.css';
 import Client from './client.js';
 
 
+
 class App extends React.Component{
 
   constructor()
   {
     super();
-    
+
   }
   render()
   {
@@ -41,7 +42,6 @@ class App extends React.Component{
       {
         document.getElementById("resultTxt").innerText = "SUCCESS"
       }
-      
     });
   }
   searchData()
