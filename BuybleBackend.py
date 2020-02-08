@@ -1,6 +1,8 @@
 import pymongo
 from pymongo import MongoClient
 import pprint
+import flask
+from flask import request
 
 
 client = MongoClient("mongodb+srv://dbUser:beholdtheWineCaves@cluster0-itr0f.mongodb.net/test?retryWrites=true&w=majority")
@@ -14,6 +16,12 @@ collection = db['storeOne']
 
 #doc = collection.find_one({"Name" : "FirstDummy"})
 #pprint.pprint(doc)
+
+@app.rout("/connection")
+def test():
+    print("Got stuff")
+    print(request.args.get('key', ''))
+    
 
 
 def addPurchase(docId, collection, quantity):
