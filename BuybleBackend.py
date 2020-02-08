@@ -21,8 +21,14 @@ def addPurchase(docId, collection, quantity):
     #doc = col.find_one({"_id" : docId})
     col.update_one({"_id":docId},{"$inc":{"quantity":quantity}})
 
-def insert(date, weather, quantity, product, store):
+def insert(date, weather, quantity, price, product, store):
     col = db[store]
-    col.insert_one({"product":product, "quantity":quantity,
-                    "weather": weather, "date":date})
+    col.insert_one({"product":product,"price":price,
+                    "quantity":quantity, "weather": weather,
+                    "date":date})
 
+def subPurchase(docId, collection, quantity):
+    col = db[collection]
+    doc = col.find_one({"_id" : docId})
+    doc["quantity"] = doc["quantity"] - quantity
+    col.replace_one({"_id" : docId}, doc)
