@@ -92,7 +92,7 @@ def login():
 def register():
     user = request.get_data()
     print(user)
-    return { 
+    return {
        "res": False
     }
 
