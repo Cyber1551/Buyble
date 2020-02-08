@@ -53,14 +53,19 @@ def get_product(name):
     return query
 
 
-def addPurchase(productName, quantity):
+@app.route("/product/addSales", methods=['POST'])
+def addPurchase(): #productName, quantity):
+    data = request.get_data()
+    lst = data.decode('ascii').split('&')
+    productName = arr[0].split('=')[1]
+    quantity = arr[1].split('=')[1]
     shop.update_one({"product": productName}, {"$inc": {"quantity": quantity}})
 
 
 def insertPurchase(date, weather, quantity, price, product):
-    shop.insert_one({"product": product, "price": price,
-                     "quantity": quantity, "weather": weather,
-                     "date": date})
+    shop.insert_one({"product": str(product), "price": float(price),
+                     "quantity": int(quantity), "weather": str(weather),
+                     "date": str(date)})
 
 
 def subPurchase(docId, collection, quantity):
