@@ -24,22 +24,7 @@ export default class App extends React.Component{
         <Route exact path='/' component={Home} />
         
       </Layout>
-=======
-    
-  }
-  render()
-  {
-    return (
-      <div className="App">
-        <input type="text" id="productNameTxt" placeholder="Product Name..." />
-        <input type="date" id="dateTxt" placeholder="Date..." />
-        <input type="number" id="quantityTxt" placeholder="Quantity..." />
-        <input type="number" id="priceTxt" placeholder="Price..." />
-        <button onClick={this.sendTestData}>Send</button><br /><br /> 
-        <input type="text" id="searchText" placeholder="Search For Product..." />
-        <button onClick={this.searchData}>Search</button><p id="resultTxt"></p>
-      </div>
->>>>>>> e970b4de334a084498a4f4d5f2950525110abc83
+
     );
   }
   /*sendTestData()
@@ -60,9 +45,8 @@ export default class App extends React.Component{
       }
       
     });
-<<<<<<< HEAD
   }*/
-=======
+
   }
   searchData()
   {
@@ -82,8 +66,8 @@ export default class App extends React.Component{
       
     })
   }
->>>>>>> e970b4de334a084498a4f4d5f2950525110abc83
-}
+
+
 
 
 
