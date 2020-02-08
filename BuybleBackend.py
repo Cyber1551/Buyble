@@ -28,11 +28,6 @@ shop = db['shop']
 # pprint.pprint(doc)
 
 
-@app.route("/connection", methods=['POST'])
-def test():
-    return "YEET"
-
-
 @app.route("/insertData", methods=['POST'])
 def data():
     datatoinsert = request.get_data()
@@ -40,24 +35,38 @@ def data():
     print(parsed)
     res = validateProductData(parsed)
     if res["res"]:
-        if get_product(parsed["name"]) is None:
+        check = get_product(parsed["name"])
+        if "res" in check:
             insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
-            return "SUCCESS"
+            return {
+                "res": True
+            }
         else:
-            return "Product already exists"
+            return {
+                "res": False,
+                "info": "Product already exists"
+            }
     else:
-        return res["info"]
+        return {
+            "res": False,
+            "info": res["info"]
+        }
 
 
 @app.route('/product/<string:name>', methods=['GET'])
 def get_product(name):
     query = shop.find_one({"product": name}, {'_id': False})
-    print(query)
-    return query
+    if query is None:
+        return {
+            "res": False,
+            "info": "The product does not exist"
+        }
+    else:
+        return query
 
 
 @app.route("/product/addSales", methods=['POST'])
-def addPurchase(): #productName, quantity):
+def addPurchase():
     data = request.get_data()
     lst = parseData(data)
     shop.update_one({"product": lst["name"]}, {"$inc": {"quantity": lst["quantity"]}})
@@ -79,6 +88,7 @@ def subPurchase(docId, collection, quantity):
 def delete(docId, collection):
     col = db[collection]
     col.delete_one({"_id": docId})
+
 
 
 def parseData(d):
