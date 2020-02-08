@@ -1,23 +1,17 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-
 import Client from './client.js';
 
 
-
-
 class App extends React.Component{
+
   constructor()
   {
-    super();  
-    
-    Client.ConnectToServer();
-    Client.SOCKET.on("connect", Client.OnConnect());
-    Client.SOCKET.on("disconnect", Client.OnDisconnect());
-    Client.SOCKET.on("data", Client.HandleData());
+    super();
+    Client.SendToServer("post", "connection", "");
+    Client.SendToServer("get", "product/pie")
   }
-
   render()
   {
     return (
@@ -36,7 +30,9 @@ class App extends React.Component{
     let date = document.getElementById("dateTxt").value;
     let quantity = document.getElementById("quantityTxt").value;
     let price = document.getElementById("priceTxt").value;
-    Client.SendDataToServer({OP: "test", name: name, date: date, quantity: quantity, price: price});
+    Client.SendToServer("post", "insertData", {name: name, date: date, quantity: quantity, price: price}, function (data) {
+      console.log(data)
+    });
   }
 }
 
