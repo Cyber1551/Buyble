@@ -15,6 +15,7 @@ client = MongoClient(
     "mongodb+srv://dbUser:beholdtheWineCaves@cluster0-itr0f.mongodb.net/test?retryWrites=true&w=majority")
 db = client['stores']
 shop = db['shop']
+accounts = db['accounts']
 
 
 # pprint.pprint(db.collection_names())
@@ -65,11 +66,34 @@ def get_product(name):
         return query
 
 
-@app.route("/product/addSales", methods=['POST'])
-def addPurchase():
-    data = request.get_data()
-    lst = parseData(data)
-    shop.update_one({"product": lst["name"]}, {"$inc": {"quantity": lst["quantity"]}})
+@app.route('/product/<string:name>/add', methods=['POST'])
+def addPurchase(name):
+    print(name)
+    return {
+        "res": False
+    }
+
+
+@app.route('/product_list', methods=['POST'])
+def getProductList():
+    return {
+       "res": False
+    }
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    return {
+       "res": False
+    }
+
+
+@app.route('/register', methods=['POST'])
+def register():
+    user = request.get_data()
+    return {
+       "res": False
+    }
 
 
 def insertPurchase(date, weather, quantity, price, product):

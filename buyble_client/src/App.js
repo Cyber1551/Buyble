@@ -1,13 +1,14 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import { Route } from 'react-router-dom';
-import { Home } from './components/Home';
-import './App.css';
+//import PrivateRoute from './components/PrivateRoute';
 import { Layout } from './components/Layout';
-import Client from './client.js';
+//import { Login } from './components/Login';
+//import { Register } from './components/Register';
+import './custom.css'
 
 
-export default class App extends React.Component{
+export default class App extends Component {
+  static displayName = App.name;
 
   /*constructor()
   {
@@ -19,7 +20,6 @@ export default class App extends React.Component{
   render()
   {
     return (
-      
       <Layout>
         <Route exact path='/' component={Home} />
         
@@ -27,48 +27,4 @@ export default class App extends React.Component{
 
     );
   }
-  /*sendTestData()
-  {
-    let name = document.getElementById("productNameTxt").value;
-    let date = document.getElementById("dateTxt").value;
-    let quantity = document.getElementById("quantityTxt").value;
-    let price = document.getElementById("priceTxt").value;
-    Client.SendToServer("post", "insertData", {name: name, date: date, quantity: quantity, price: price}, function (data) {
-      if (data.info != undefined)
-      {
-        
-        document.getElementById("resultTxt").innerText = data.info;
-      }
-      else
-      {
-        document.getElementById("resultTxt").innerText = "SUCCESS"
-      }
-      
-    });
-  }*/
-
-  }
-  searchData()
-  {
-    let txt = document.getElementById("searchText").value;
-    Client.SendToServer("get", `product/${txt}`, null, function (data) {
-      
-      console.log(data)
-      if (data.res != undefined)
-      {
-        document.getElementById("resultTxt").innerText = data.info;
-      }
-      else
-      {
-        document.getElementById("resultTxt").innerText = `There are #${data.quantity} ${data.product} that costs ${data.price} on date ${data.date}`;
-      }
-
-      
-    })
-  }
-
-
-
-
-
-//export default App;
+}
