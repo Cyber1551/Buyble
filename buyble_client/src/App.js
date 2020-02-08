@@ -1,30 +1,31 @@
 import React from 'react';
 import logo from './logo.svg';
+import { Route } from 'react-router-dom';
+import { Home } from './components/Home';
 import './App.css';
+import { Layout } from './components/Layout';
 import Client from './client.js';
 
 
-class App extends React.Component{
+export default class App extends React.Component{
 
-  constructor()
+  /*constructor()
   {
     super();
     Client.SendToServer("post", "connection", "");
     Client.SendToServer("get", "product/pie")
-  }
+  }*/
   render()
   {
     return (
-      <div className="App">
-        <input type="text" id="productNameTxt" placeholder="Product Name..." />
-        <input type="date" id="dateTxt" placeholder="Date..." />
-        <input type="number" id="quantityTxt" placeholder="Quantity..." />
-        <input type="number" id="priceTxt" placeholder="Price..." />
-        <button onClick={this.sendTestData}>Send</button>
-      </div>
+      
+      <Layout>
+        <Route exact path='/' component={Home} />
+        
+      </Layout>
     );
   }
-  sendTestData()
+  /*sendTestData()
   {
     let name = document.getElementById("productNameTxt").value;
     let date = document.getElementById("dateTxt").value;
@@ -33,9 +34,9 @@ class App extends React.Component{
     Client.SendToServer("post", "insertData", {name: name, date: date, quantity: quantity, price: price}, function (data) {
       console.log(data)
     });
-  }
+  }*/
 }
 
 
 
-export default App;
+//export default App;
