@@ -32,3 +32,7 @@ def subPurchase(docId, collection, quantity):
     doc = col.find_one({"_id" : docId})
     doc["quantity"] = doc["quantity"] - quantity
     col.replace_one({"_id" : docId}, doc)
+
+def delete(docId,collection):
+    col = db[collection]
+    col.delete_one({"_id":docId})
