@@ -77,7 +77,8 @@ def addPurchase(name):
 @app.route('/product_list', methods=['POST'])
 def getProductList():
     prods = shop.distinct("product")
-    return jsonify("info"=prods)
+    return json.dumps(prods)
+
 
 
 @app.route('/login', methods=['POST'])
@@ -90,6 +91,7 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     user = request.get_data()
+    print(user)
     return { 
        "res": False
     }

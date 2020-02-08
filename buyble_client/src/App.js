@@ -5,6 +5,8 @@ import { Layout } from './components/Layout';
 //import { Login } from './components/Login';
 //import { Register } from './components/Register';
 import { Home } from './components/Home';
+import { Register } from './components/Register';
+import {Login} from './components/Login';
 
 
 
@@ -23,7 +25,8 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
-        
+        <Route exact path='/Login' component={Login} />
+        <Route exact path='/Register' component={Register} />
       </Layout>
 
     );
