@@ -12,7 +12,7 @@ export default class App extends React.Component{
   /*constructor()
   {
     super();
-<<<<<<< HEAD
+
     Client.SendToServer("post", "connection", "");
     Client.SendToServer("get", "product/pie")
   }*/
