@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
 import Client from '../client.js';
-import {PieGraph} from './PieGraph';
-import { Redirect } from 'react-router-dom';
-import { ButtonToolbar, ButtonGroup} from 'bootstrap';
+import { auth } from './auth.js';
+import {Redirect} from 'react-router-dom'
 
 export class Home extends Component {
     constructor(props) {
         super(props);
-        
+
         this.state = {
             fetched: false,
             redirectProductList: false,
+            shouldRedirect: false
         }
         console.log(this.state);
     }
@@ -37,10 +37,17 @@ export class Home extends Component {
             );
         }
         else {
+          if (this.state.shouldRedirect)
+          {
+            return(
+              <Redirect to='/' />
+            )
+          }
+          else {
             return(
                 <div className="Home">
                     <p>Welcome to My Store!</p>
-                    
+
                     <input type="text" id="productNameTxt" placeholder="Product Name..." />
                     <input type="date" id="dateTxt" placeholder="Date..." />
                     <input type="number" id="quantityTxt" placeholder="Quantity..." />
@@ -53,12 +60,20 @@ export class Home extends Component {
                     </ButtonToolbar>
                     
                     <PieGraph/>
-                    
+                    <button onClick={this.productList.bind(this)}>Go to Product List</button><br />
+                    <button onClick={this.onClickLogout.bind(this)}>Logout</button>
+
                 </div>
             )
+          }
+
         }
-            
-        
+
+
     }
-    
+    onClickLogout()
+    {
+        auth.logout();
+        this.setState({shouldRedirect: true})
+    }
 }

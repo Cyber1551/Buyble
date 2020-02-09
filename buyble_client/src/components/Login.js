@@ -1,22 +1,45 @@
 import React, { Component } from 'react';
+import {Redirect} from 'react-router-dom';
 import Client from '../client.js';
+import {auth} from './auth.js';
 
-export class Login extends Component {
-    
+
+export default class Login extends Component {
+    state = {
+        shouldRedirect: false,
+      };
+      constructor(props)
+      {
+        super(props);
+      }
+
     render() {
+        if (this.state.shouldRedirect) {
+            return (
+                <Redirect to='/Home' />
+            )
+        } else {
         return(
-            <div className="Register">
-                <p>Register!</p> 
+             <div className="Login">
+                <p>Login!</p> 
                 <input type="email" id="emailLogin" placeholder="Email..." /><br /> 
                 <input type="password" id="passwordLogin" placeholder="Password..." /><br />
-                <button onClick={this.onClickLogin}>Login</button>
+                <button onClick={this.onClickLogin.bind(this)}>Login</button>
             </div>
         )
+          }
     }
-    sendTestData()
+    onClickLogin()
     {
-        Client.SendToServer("POST", "product_list", null, function(data) {
-            console.log(data)
+        let current = this;
+        auth.login(function(data)
+        {
+            console.log(current)
+            current.setState({ shouldRedirect: true })
         })
+        
     }
+
+
+  
 }

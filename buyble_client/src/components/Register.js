@@ -22,12 +22,24 @@ export class Register extends Component {
         let storeName = document.getElementById("storeNameRegister").value;
         let password = document.getElementById("passwordRegister").value;
         let passwordR = document.getElementById("repeatPasswordRegister").value;
-        if (password != passwordR)
+        if (password !== passwordR)
         {
             document.getElementById("notTxt").innerText = "Password don't match";
         }
-        Client.SendToServer("POST", "login", {email: email, storeName: storeName, password: password}, function(data) {
-            console.log(data)
-        })
+        else
+        {
+            Client.SendToServer("POST", "register", {email: email, store: storeName, password: password}, function(data) {
+                if (data.info !== undefined)
+                {
+                    document.getElementById("notTxt").innerText = data.info;
+                }
+                else
+                {
+                    document.getElementById("notTxt").innerText = "SUCCESS";
+                }
+                
+            })
+        }
+        
     }
 }

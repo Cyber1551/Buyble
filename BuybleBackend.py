@@ -69,6 +69,18 @@ def get_product(name, date):
         return json.dumps({"info":q})
 
 
+@app.route('/user/<string:email>', methods=['GET'])
+def get_user(email):
+    query = accounts.find_one({"email": email}, {'_id': False})
+    if query is None:
+        return {
+            "res": False,
+            "info": "The user does not exist"
+        }
+    else:
+        return query
+
+
 @app.route('/product/<string:name>/add', methods=['POST'])
 def addPurchase(name):
     print(name)
@@ -83,7 +95,6 @@ def getProductList():
     return json.dumps(prods)
 
 
-
 @app.route('/login', methods=['POST'])
 def login():
     return {
@@ -94,10 +105,29 @@ def login():
 @app.route('/register', methods=['POST'])
 def register():
     user = request.get_data()
-    print(user)
-    return {
-       "res": False
-    }
+    parsed = parseData(user)
+    res = validateUser(parsed)
+    if res["res"]:
+        check = get_user(parsed["email"])
+        if "res" in check:
+            insertUser(parsed["email"], parsed["store"], parsed["password"])
+            return {
+                "res": True
+            }
+        else:
+            return {
+                "res": False,
+                "info": "User already exists"
+            }
+    else:
+        return {
+            "res": False,
+            "info": res["info"]
+        }
+
+
+def insertUser(email, store, password):
+    accounts.insert_one({"email": str(email), "store": str(store), "password": str(password)})
 
 
 def insertPurchase(date, weather, quantity, price, product):
@@ -118,21 +148,9 @@ def delete(docId, collection):
     col.delete_one({"_id": docId})
 
 
-
 def parseData(d):
     arr = json.loads(d.decode('ascii'))
-
-    name = arr["name"]
-    date = arr["date"]
-    quantity = arr['quantity']
-    price = arr['price']
-    obj = {
-        "name": name,
-        "date": date,
-        "quantity": quantity,
-        "price": price
-    }
-    return obj
+    return arr
 
 
 def validateProductData(d):
@@ -145,6 +163,24 @@ def validateProductData(d):
         validateInt(d["quantity"]),
         validateDate(d["date"]),
         validateString(d["name"])
+    ]
+    for val in values:
+        if not val["res"]:
+            res["res"] = False
+            res["info"] = val["info"]
+
+    return res
+
+
+def validateUser(user):
+    res = {
+        "res": True,
+        "info": ""
+    }
+    values = [
+        validateString(user["password"]),
+        validateString(user["store"]),
+        validateString(user["email"])
     ]
     for val in values:
         if not val["res"]:
