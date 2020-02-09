@@ -1,4 +1,5 @@
 import Client from '../client.js';
+import { NavMenu } from './NavMenu.js';
 const LOCAL_STORAGE_KEY = "auth_key";
 
  
@@ -48,6 +49,7 @@ class Auth {
   login(cb) {
     Client.SendToServer("POST", "login", null, (data) => {
         this.setToken("HI")
+       // new NavMenu().checkLoggedIn();
         if (cb) cb(data);
     })
     
@@ -56,6 +58,7 @@ class Auth {
 
   logout() {
     this.removeToken();
+    //new NavMenu().checkLoggedIn();
   }
 
 }

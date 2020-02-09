@@ -11,12 +11,13 @@ export default class Login extends Component {
       constructor(props)
       {
         super(props);
+
       }
 
     render() {
         if (this.state.shouldRedirect) {
             return (
-                <Redirect to='/Home' />
+                <Redirect to='/' />
             )
         } else {
         return(

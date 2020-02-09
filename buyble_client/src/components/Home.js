@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Client from '../client.js';
 import { auth } from './auth.js';
 import {Redirect} from 'react-router-dom'
+import {PieGraph} from './PieGraph.js'
 
 export class Home extends Component {
     constructor(props) {
@@ -10,7 +11,6 @@ export class Home extends Component {
         this.state = {
             fetched: false,
             redirectProductList: false,
-            shouldRedirect: false
         }
         console.log(this.state);
     }
@@ -25,18 +25,11 @@ export class Home extends Component {
             console.log("redirecting!");
             return (
                 <Redirect to={{
-                    pathname:'./productlist'
+                    pathname:'/productlist'
                 }}/>
             );
         }
         else {
-          if (this.state.shouldRedirect)
-          {
-            return(
-              <Redirect to='/' />
-            )
-          }
-          else {
             return(
                 <div className="Home">
                     <p>Welcome to My Store!</p>
@@ -48,19 +41,10 @@ export class Home extends Component {
                     <button onClick={this.sendTestData}>Send</button>
                     <PieGraph/>
                     <button onClick={this.productList.bind(this)}>Go to Product List</button><br />
-                    <button onClick={this.onClickLogout.bind(this)}>Logout</button>
-
                 </div>
             )
           }
 
         }
 
-
-    }
-    onClickLogout()
-    {
-        auth.logout();
-        this.setState({shouldRedirect: true})
-    }
 }
