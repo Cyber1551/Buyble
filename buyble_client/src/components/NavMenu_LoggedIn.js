@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler } from 'reactstrap';
+import { Collapse, Container, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import './NavMenu.css';
 import { auth } from './auth';
 import ReactDOM from 'react-dom'
 
 
-export class NavMenu extends Component {
-  static displayName = NavMenu.name;
+export class NavMenu_LoggedIn extends Component {
+  static displayName = NavMenu_LoggedIn.name;
 
   constructor (props) {
     super(props);
@@ -39,7 +39,9 @@ export class NavMenu extends Component {
               <NavbarToggler onClick={this.toggleNavbar} className="mr-2" />
               <Collapse className="d-sm-inline-flex flex-sm-row-reverse" isOpen={!this.state.collapsed} navbar>
                 <ul className="navbar-nav flex-grow">
-                 
+                   <NavItem>
+                     <NavLink tag={Link} className="header" to="/Logout">Logout</NavLink>
+                   </NavItem>
                 </ul>
               </Collapse>
             </Container>

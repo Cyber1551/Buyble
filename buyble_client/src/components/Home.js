@@ -3,7 +3,10 @@ import Client from '../client.js';
 import { auth } from './auth.js';
 import {Redirect} from 'react-router-dom'
 import {PieGraph} from './PieGraph.js'
-
+import ButtonToolbar from 'bootstrap' 
+import ButtonGroup from 'bootstrap'
+import { NavMenu } from './NavMenu';
+import { NavMenu_LoggedIn } from './NavMenu_LoggedIn.js';
 export class Home extends Component {
     constructor(props) {
         super(props);
@@ -28,6 +31,7 @@ export class Home extends Component {
     }
 
     render() {
+        
         if (this.state.redirectProductList === true) {
             console.log("redirecting!");
             return (
@@ -38,19 +42,18 @@ export class Home extends Component {
         }
         else {
             return(
+
                 <div className="Home">
+                    <NavMenu_LoggedIn />
                     <p>Welcome to My Store!</p>
 
                     <input type="text" id="productNameTxt" placeholder="Product Name..." />
                     <input type="date" id="dateTxt" placeholder="Date..." />
                     <input type="number" id="quantityTxt" placeholder="Quantity..." />
                     <input type="number" id="priceTxt" placeholder="Price..." />
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup className="mr-2" aria-label="First group">
-                            <button onClick={this.sendTestData.bind(this)}>Send</button>
-                            <button onClick={this.productList.bind(this)}>Go to Product List</button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
+                    <button onClick={this.sendTestData.bind(this)}>Send</button>
+                    <button onClick={this.productList.bind(this)}>Go to Product List</button>
+         
                     
                     <PieGraph/>
                     <button onClick={this.productList.bind(this)}>Go to Product List</button><br />

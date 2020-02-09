@@ -6,14 +6,17 @@ import {auth} from './auth.js';
 
 const PrivateRoute = ({ component, component_fail, ...rest }) => (
     
-    <Route {...rest} render={(props) => (
-        auth.isLoggedIn() ? (
-            React.createElement(component, props)
-        ) : (
-            React.createElement(component_fail, props)
-        )
+    <Route {...rest} render={(props) => 
         
-    )} />
+            auth.isLoggedIn() ? (
+               React.createElement(component, props)
+               
+            ) : (
+                React.createElement(component_fail, props)
+            )
+            
+        
+    } />
 );
 
 export default PrivateRoute;

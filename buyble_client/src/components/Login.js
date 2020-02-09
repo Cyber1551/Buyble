@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {Redirect} from 'react-router-dom';
 import Client from '../client.js';
 import {auth} from './auth.js';
+import {NavMenu} from './NavMenu'
 
 
 export default class Login extends Component {
@@ -21,7 +22,9 @@ export default class Login extends Component {
             )
         } else {
         return(
+
              <div className="Login">
+                <NavMenu />
                 <p>Login!</p> 
                 <input type="email" id="emailLogin" placeholder="Email..." /><br /> 
                 <input type="password" id="passwordLogin" placeholder="Password..." /><br />
