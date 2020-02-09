@@ -12,7 +12,7 @@ export class ProductList extends Component {
     render(){
         console.log("Product list hit");
         return(
-            <MDBContainer>
+            <MDBContainer className="justify-content-center">
                 <h1>Does this show?</h1>
                 <MDBListGroup style={{ width: "22rem" }}>
                 <MDBListGroupItem>Cras justo odio</MDBListGroupItem>

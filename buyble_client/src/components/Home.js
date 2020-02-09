@@ -3,6 +3,8 @@ import Client from '../client.js';
 import { auth } from './auth.js';
 import {Redirect} from 'react-router-dom'
 import {PieGraph} from './PieGraph.js'
+import {ButtonGroup, Button} from 'react-bootstrap';
+import {MDBContainer, MDBRow} from 'mdbreact';
 
 export class Home extends Component {
     constructor(props) {
@@ -38,22 +40,29 @@ export class Home extends Component {
         }
         else {
             return(
-                <div className="Home">
-                    <p>Welcome to My Store!</p>
-
-                    <input type="text" id="productNameTxt" placeholder="Product Name..." />
-                    <input type="date" id="dateTxt" placeholder="Date..." />
-                    <input type="number" id="quantityTxt" placeholder="Quantity..." />
-                    <input type="number" id="priceTxt" placeholder="Price..." />
-                    <ButtonToolbar aria-label="Toolbar with button groups">
-                        <ButtonGroup className="mr-2" aria-label="First group">
-                            <button onClick={this.sendTestData.bind(this)}>Send</button>
-                            <button onClick={this.productList.bind(this)}>Go to Product List</button>
-                        </ButtonGroup>
-                    </ButtonToolbar>
-                    
-                    <PieGraph/>
-                    <button onClick={this.productList.bind(this)}>Go to Product List</button><br />
+                <div className="Home" style={{border:"2px solid #fff"}}>
+                   
+                    <MDBContainer className="justify-content-center" style={{border:"2px solid #fff"}}>
+                    <MDBRow className="justify-content-center">
+                        <p>Welcome to My Store!</p>
+                    </MDBRow>
+                        <MDBRow className="justify-content-center">
+                            
+                            <input type="text" id="productNameTxt" placeholder="Product Name..." />
+                            <input type="date" id="dateTxt" placeholder="Date..." />
+                            <input type="number" id="quantityTxt" placeholder="Quantity..." />
+                            <input type="number" id="priceTxt" placeholder="Price..." />
+                        </MDBRow>  
+                        <MDBRow className="justify-content-center">        
+                            <ButtonGroup aria-label="Basic example">
+                                <Button variant="secondary" onClick={this.sendTestData.bind(this)}>Send</Button>
+                                <Button variant="secondary" onClick={this.productList.bind(this)}>Go to Product List</Button>
+                            </ButtonGroup>
+                        </MDBRow>
+                        <MDBRow className="justify-content-center">  
+                            <PieGraph/>
+                        </MDBRow>
+                    </MDBContainer>
                 </div>
             )
           }
