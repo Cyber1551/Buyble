@@ -64,7 +64,7 @@ def get_product(name, date):
     query = shop.find({"product": name}, {'_id': False})
     length = query.count_documents()
     q = query[0:length]
-    
+
     if len(q) is 0:
         return {
             "res": False,
@@ -176,6 +176,17 @@ def delete(docId, collection):
     col = db[collection]
     col.delete_one({"_id": docId})
 
+@app.route('/getProducts', methods=['POST'])
+def getNameAndQuantity():
+    firstCollection = request.get_data()
+    collection = parseData(firstCollection)
+    col = db[collection["collectionName"]]
+    docs = col.find({})
+    docTuples = []
+    for doc in docs:
+        color = "%03x" % random.randint(0, 0xFFF)
+        docTuples.append(doc["product"], doc["quantity"], color)
+    return docTuples
 
 def parseData(d):
     arr = json.loads(d.decode('ascii'))
