@@ -29,7 +29,7 @@ export class Home extends Component {
     
     loadDataForPieGraph(){
         console.log("data loaded");
-        Client.SendToServer('POST', 'getProducts', 'shop', function(data){this.setState({data: data})});
+        Client.SendToServer('POST', 'getProducts', {'collectionName' : 'shop'}, function(data){this.setState({data: data})});
         console.log(this.state.data);
     }
     productList() {

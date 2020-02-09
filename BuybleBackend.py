@@ -150,8 +150,9 @@ def delete(docId, collection):
 
 @app.route('/getProducts', methods=['POST'])
 def getNameAndQuantity():
-    collection = request.get_data()
-    col = db[collection]
+    firstCollection = request.get_data()
+    collection = parseData(firstCollection)
+    col = db[collection["collectionName"]]
     docs = col.find({})
     docTuples = []
     for doc in docs:
