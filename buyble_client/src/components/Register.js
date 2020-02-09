@@ -16,30 +16,5 @@ export class Register extends Component {
             </div>
         )
     }
-    onClickRegister()
-    {
-        let email = document.getElementById("emailRegister").value;
-        let storeName = document.getElementById("storeNameRegister").value;
-        let password = document.getElementById("passwordRegister").value;
-        let passwordR = document.getElementById("repeatPasswordRegister").value;
-        if (password !== passwordR)
-        {
-            document.getElementById("notTxt").innerText = "Password don't match";
-        }
-        else
-        {
-            Client.SendToServer("POST", "register", {email: email, store: storeName, password: password}, function(data) {
-                if (data.info !== undefined)
-                {
-                    document.getElementById("notTxt").innerText = data.info;
-                }
-                else
-                {
-                    document.getElementById("notTxt").innerText = "SUCCESS";
-                }
-                
-            })
-        }
-        
-    }
+   
 }

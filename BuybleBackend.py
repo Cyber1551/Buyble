@@ -19,7 +19,6 @@ hash_fn = basehash.base36()
 client = MongoClient(
     "mongodb+srv://dbUser:beholdtheWineCaves@cluster0-itr0f.mongodb.net/test?retryWrites=true&w=majority")
 db = client['stores']
-shop = db['shop']
 accounts = db['accounts']
 
 
@@ -41,17 +40,10 @@ def data():
     print(parsed)
     res = validateProductData(parsed)
     if res["res"]:
-        check = get_product(parsed["name"])
-        if "res" in check:
-            insertPurchase(parsed["date"], "null", parsed["quantity"], parsed["price"], parsed["name"])
-            return {
-                "res": True
-            }
-        else:
-            return {
-                "res": False,
-                "info": "Product already exists"
-            }
+        insertPurchase(parsed["user"], "null", parsed["quantity"], parsed["price"], parsed["name"])
+        return {
+            "res": True
+        }
     else:
         return {
             "res": False,
@@ -60,7 +52,7 @@ def data():
 
 
 @app.route('/product/<string:name>', methods=['GET'])
-def get_product(name, date):
+def get_product(name):
     query = shop.find({"product": name}, {'_id': False})
     length = query.count_documents()
     q = query[0:length]
@@ -89,15 +81,16 @@ def get_user(email):
 @app.route('/product/<string:name>/add', methods=['POST'])
 def addPurchase(name):
     print(name)
+    userd = request.get_data()
+    user = parseData(userd)
+    col = db[user["user"]]
+    query = {"name": name}
+    values = {"$inc": {"quantity": 1}}
+
+    col.update_one(query, values)
     return {
-        "res": False
+        "res": True
     }
-
-
-@app.route('/product_list', methods=['POST'])
-def getProductList():
-    prods = shop.distinct("product")
-    return json.dumps(prods)
 
 
 @app.route('/login', methods=['POST'])
@@ -113,9 +106,9 @@ def login():
     else:
         return {
             "res": True,
+            "user": parsed["email"],
             "info": hash_fn.hash(TOKEN)
         }
-
 
 
 def authenticateUser(email, password):
@@ -157,36 +150,58 @@ def register():
 
 def insertUser(email, store, password):
     accounts.insert_one({"email": str(email), "store": str(store), "password": str(password)})
+    db.create_collection(str(email))
 
 
-def insertPurchase(date, weather, quantity, price, product):
-    shop.insert_one({"product": str(product), "price": float(price),
-                     "quantity": int(quantity), "weather": str(weather),
-                     "date": str(date)})
+def insertPurchase(user, weather, quantity, price, product):
+    print(user)
+    if user in db.list_collection_names():
+        col = db[user]
+        v = col.find({"name": product}, {"_id": False})
+        if len(list(v)) == 0:
+            col.insert_one({"name": product, "quantity": int(quantity), "price": float(price)})
 
 
-def subPurchase(docId, collection, quantity):
-    col = db[collection]
-    doc = col.find_one({"_id": docId})
-    doc["quantity"] = doc["quantity"] - quantity
-    col.replace_one({"_id": docId}, doc)
+@app.route('/product/<string:name>/sub', methods=['POST'])
+def subPurchase(name):
+    print(name)
+    userd = request.get_data()
+    user = parseData(userd)
+    col = db[user["user"]]
+    query = {"name": name}
+    values = {"$inc": {"quantity": -1}}
+
+    col.update_one(query, values)
+    return {
+        "res": True
+    }
 
 
 def delete(docId, collection):
     col = db[collection]
     col.delete_one({"_id": docId})
 
-@app.route('/getProducts', methods=['POST'])
+
+@app.route('/product_list', methods=['POST'])
 def getNameAndQuantity():
-    firstCollection = request.get_data()
-    collection = parseData(firstCollection)
-    col = db[collection["collectionName"]]
-    docs = col.find({})
+    d = request.get_data()
+    user = parseData(d)
+    col = db[user["user"]]
+    docs = col.find({}, {"_id": False})
+
     docTuples = []
     for doc in docs:
-        color = "%03x" % random.randint(0, 0xFFF)
-        docTuples.append(doc["product"], doc["quantity"], color)
-    return docTuples
+        docTuples.append(
+            {
+                "name": doc["name"],
+                "value": int(doc["quantity"])
+            }
+        )
+
+    return {
+        "res": docTuples
+    }
+
 
 def parseData(d):
     arr = json.loads(d.decode('ascii'))
@@ -201,7 +216,6 @@ def validateProductData(d):
     values = [
         validateFloat(d["price"]),
         validateInt(d["quantity"]),
-        validateDate(d["date"]),
         validateString(d["name"])
     ]
     for val in values:

@@ -1,48 +1,44 @@
 import React, { Component } from 'react';
 import Client from '../client.js';
 import { auth } from './auth.js';
-import {Redirect} from 'react-router-dom'
-import {PieGraph} from './PieGraph.js'
-import { NavMenu } from './NavMenu';
+import { Redirect } from 'react-router-dom'
+import PieGraph from './PieGraph.js'
 import { NavMenu_LoggedIn } from './NavMenu_LoggedIn.js';
-import {ButtonGroup, Button} from 'react-bootstrap';
-import {MDBContainer, MDBRow} from 'mdbreact';
-
+import { ButtonGroup, Button, Tab, Tabs } from 'react-bootstrap';
+import { MDBContainer, MDBRow } from 'mdbreact';
+import { ProductList } from './ProductList'
+import { ListElement } from './ListElement.js';
 export class Home extends Component {
+
     constructor(props) {
         super(props);
 
         this.state = {
             fetched: false,
-            data:[
-                { title: 'One', value: 10, color: '#E38627' },
-                { title: 'Two', value: 15, color: '#C13C37' },
-                { title: 'Three', value: 20, color: '#6A2135' },
-            ],
+            data: [],
             redirectProductList: false,
+            names: ['Jake', 'Jon', 'Thruster']
         }
         console.log(this.state);
     }
     componentDidMount() {
         this.loadDataForPieGraph();
     }
-    
-    loadDataForPieGraph(){
+
+    loadDataForPieGraph() {
         console.log("data loaded");
-        Client.SendToServer('POST', 'getProducts', {'collectionName' : 'shop'}, function(data){this.setState({data: data})});
-        console.log(this.state.data);
+        let current = this;
+        Client.SendToServer('POST', 'product_list', { "user": auth.getUsername() }, function (data) {
+            console.log(data)
+            current.setState({ data: data.res })
+        });
+        console.log(this.state.data.res);
     }
     productList() {
         console.log(this.state);
-        this.setState({redirectProductList: true})
+        this.setState({ redirectProductList: true })
     }
 
-    sendTestData()
-    {
-        Client.SendToServer("POST", "product_list", null, function(data) {
-            console.log(data)
-        })
-    }
 
     render() {
 
@@ -50,40 +46,60 @@ export class Home extends Component {
             console.log("redirecting!");
             return (
                 <Redirect to={{
-                    pathname:'/productlist'
-                }}/>
+                    pathname: '/productlist'
+                }} />
             );
         }
         else {
             console.log(this.state.data);
-            return(
-                <div className="Home" style={{border:"2px solid #fff"}}>
-                  <NavMenu_LoggedIn />
-                    <MDBContainer className="justify-content-center" style={{border:"2px solid #fff"}}>
-                    <MDBRow className="justify-content-center">
-                        <p>Welcome to My Store!</p>
-                    </MDBRow>
+
+            return (
+                <div className="Home" style={{ border: "2px solid #fff" }}>
+                    <NavMenu_LoggedIn />
+                    <MDBContainer className="justify-content-center" style={{ border: "2px solid #fff" }}>
+                        <MDBRow className="justify-content-center">
+                            <p>Welcome, {auth.getUsername()}</p>
+                        </MDBRow>
+
+                        <MDBRow className="justify-content-center">
+                            <Tabs defaultActiveKey="dashboard" transition={false} style={{ width: "100%", height: "100%" }}>
+                                <Tab eventKey="dashboard" title="Dashboard" >
+                                    <PieGraph data={this.state.data} />
+                                </Tab>
+                                <Tab eventKey="product" title="Products">
+                                    <MDBRow className="justify-content-center">
+
+                                        <input type="text" id="productNameTxt" placeholder="Product Name..." />
+                                        <input type="number" id="quantityTxt" placeholder="Quantity..." />
+                                        <input type="number" id="priceTxt" placeholder="Price..." />
+                                        <Button variant="secondary" onClick={this.sendTestData.bind(this)}>Add</Button>
+                                    </MDBRow>
+                                     
+                                    <ListElement home={this} data={this.state.data} />
+
+                                </Tab>
+                            </Tabs>
+                        </MDBRow>
                         <MDBRow className="justify-content-center">
 
-                            <input type="text" id="productNameTxt" placeholder="Product Name..." />
-                            <input type="date" id="dateTxt" placeholder="Date..." />
-                            <input type="number" id="quantityTxt" placeholder="Quantity..." />
-                            <input type="number" id="priceTxt" placeholder="Price..." />
-                        </MDBRow>
-                        <MDBRow className="justify-content-center">
-                            <ButtonGroup aria-label="Basic example">
-                                <Button variant="secondary" onClick={this.sendTestData.bind(this)}>Send</Button>
-                                <Button variant="secondary" onClick={this.productList.bind(this)}>Go to Product List</Button>
-                            </ButtonGroup>
-                        </MDBRow>
-                        <MDBRow className="justify-content-center">
-                            <PieGraph data={this.state.data}/>
+
                         </MDBRow>
                     </MDBContainer>
                 </div>
             )
-          }
-
         }
+
+    }
+    sendTestData() {
+        let name = document.getElementById("productNameTxt").value;
+        let quantity = document.getElementById("quantityTxt").value;
+        let price = document.getElementById("priceTxt").value;
+        let current = this;
+        Client.SendToServer("POST", "insertData", { "user": auth.getUsername(), "name": name, "quantity": quantity, "price": price }, function (data) {
+            console.log(data)
+            current.loadDataForPieGraph();
+        })
+    }
+
 
 }
