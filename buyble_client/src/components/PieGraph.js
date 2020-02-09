@@ -2,7 +2,13 @@ import PieChart from 'react-minimal-pie-chart';
 import React, { Component } from 'react';
 
 export class PieGraph extends Component {
-    
+    constructor(props){
+        super(props);
+        
+        this.state = {
+            data: [],
+        }
+    }
     render(){
         return(
             <PieChart
