@@ -3,7 +3,7 @@ import { Route } from 'react-router-dom';
 //import PrivateRoute from './components/PrivateRoute';
 import { Layout } from './components/Layout';
 //import { Login } from './components/Login';
-//import { Register } from './components/Register';
+import { ProductList } from './components/ProductList';
 import { Home } from './components/Home';
 import './custom.css'
 
@@ -23,7 +23,7 @@ export default class App extends Component {
     return (
       <Layout>
         <Route exact path='/' component={Home} />
-        
+        <Route exact path='/ProductList' component={ProductList} />
       </Layout>
 
     );
