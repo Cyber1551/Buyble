@@ -11,10 +11,10 @@ class Auth {
       this.token = localStorage.getItem(LOCAL_STORAGE_KEY);
 
       if (this.token) {
-        if (!this.isTokenValid())
+        this.isTokenNotValid(function()
         {
             this.token = null;
-        }
+        })
         
       }
     }
@@ -42,14 +42,26 @@ class Auth {
     }
   }
 
-  isTokenValid() {
-      return this.token === "HI";
+  isTokenNotValid(cb) {
+    Client.SendToServer("POST", "authenticateToken", {"key": this.token}, (data) => {
+      if (!data.res)
+      {
+        if (cb) cb();
+      }
+       
+    })
+
+    
   }
 
-  login(cb) {
-    Client.SendToServer("POST", "login", null, (data) => {
-        this.setToken("HI")
-       // new NavMenu().checkLoggedIn();
+  login(data, cb) {
+    Client.SendToServer("POST", "login", data, (data) => {
+        if (data.res)
+        {
+            this.setToken(data.info)
+        }
+
+        
         if (cb) cb(data);
     })
     

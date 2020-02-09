@@ -7,10 +7,15 @@ from flask import Flask
 from flask_cors import CORS
 import json
 import datetime
+import random
+import basehash
+
 
 app = Flask(__name__)
 CORS(app)
 
+TOKEN = 55555
+hash_fn = basehash.base36()
 client = MongoClient(
     "mongodb+srv://dbUser:beholdtheWineCaves@cluster0-itr0f.mongodb.net/test?retryWrites=true&w=majority")
 db = client['stores']
@@ -97,8 +102,32 @@ def getProductList():
 
 @app.route('/login', methods=['POST'])
 def login():
+    user_data = request.get_data()
+    parsed = parseData(user_data)
+    user = authenticateUser(parsed["email"], parsed["password"])
+    if user is None:
+        return {
+            "res": False,
+            "info": "Incorrect Username or Password..."
+        }
+    else:
+        return {
+            "res": True,
+            "info": hash_fn.hash(TOKEN)
+        }
+
+
+
+def authenticateUser(email, password):
+    return accounts.find_one({"email": email, "password": password}, {"_id": False})
+
+
+@app.route('/authenticateToken', methods=['POST'])
+def authenticateToken():
+    k = request.get_data()
+    parsed = parseData(k)
     return {
-       "res": False
+        "res": (hash_fn.unhash(parsed["key"]) == TOKEN)
     }
 
 
