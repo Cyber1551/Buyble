@@ -7,6 +7,7 @@ from flask import Flask
 from flask_cors import CORS
 import json
 import datetime
+import random
 
 app = Flask(__name__)
 CORS(app)
@@ -147,6 +148,16 @@ def delete(docId, collection):
     col = db[collection]
     col.delete_one({"_id": docId})
 
+@app.route('/getProducts', methods=['POST'])
+def getNameAndQuantity():
+    collection = request.get_data()
+    col = db[collection]
+    docs = col.find({})
+    docTuples = []
+    for doc in docs:
+        color = "%03x" % random.randint(0, 0xFFF)
+        docTuples.append(doc["product"], doc["quantity"], color)
+    return docTuples
 
 def parseData(d):
     arr = json.loads(d.decode('ascii'))

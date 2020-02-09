@@ -14,11 +14,24 @@ export class Home extends Component {
 
         this.state = {
             fetched: false,
+            data:[
+                { title: 'One', value: 10, color: '#E38627' },
+                { title: 'Two', value: 15, color: '#C13C37' },
+                { title: 'Three', value: 20, color: '#6A2135' },
+            ],
             redirectProductList: false,
         }
         console.log(this.state);
     }
-
+    componentDidMount() {
+        this.loadDataForPieGraph();
+    }
+    
+    loadDataForPieGraph(){
+        console.log("data loaded");
+        Client.SendToServer('POST', 'getProducts', 'shop', function(data){this.setState({data: data})});
+        console.log(this.state.data);
+    }
     productList() {
         console.log(this.state);
         this.setState({redirectProductList: true})
@@ -42,6 +55,7 @@ export class Home extends Component {
             );
         }
         else {
+            console.log(this.state.data);
             return(
                 <div className="Home" style={{border:"2px solid #fff"}}>
                   <NavMenu_LoggedIn />
@@ -63,7 +77,7 @@ export class Home extends Component {
                             </ButtonGroup>
                         </MDBRow>
                         <MDBRow className="justify-content-center">
-                            <PieGraph/>
+                            <PieGraph data={this.state.data}/>
                         </MDBRow>
                     </MDBContainer>
                 </div>
