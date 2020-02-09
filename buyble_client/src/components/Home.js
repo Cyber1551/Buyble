@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Redirect } from 'react-router';
-import { PieGraph } from './PieGraph';
+import Client from '../client.js';
+
 export class Home extends Component {
     constructor(props) {
         super(props);
@@ -43,5 +43,11 @@ export class Home extends Component {
         }
             
         
+    }
+    sendTestData()
+    {
+        Client.SendToServer("POST", "product_list", null, function(data) {
+            console.log(data)
+        })
     }
 }
