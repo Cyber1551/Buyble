@@ -55,15 +55,18 @@ def data():
 
 
 @app.route('/product/<string:name>', methods=['GET'])
-def get_product(name):
-    query = shop.find_one({"product": name}, {'_id': False})
-    if query is None:
+def get_product(name, date):
+    query = shop.find({"product": name}, {'_id': False})
+    length = query.count_documents()
+    q = query[0:length]
+    
+    if len(q) is 0:
         return {
             "res": False,
             "info": "The product does not exist"
         }
     else:
-        return query
+        return json.dumps({"info":q})
 
 
 @app.route('/user/<string:email>', methods=['GET'])
