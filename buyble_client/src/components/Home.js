@@ -3,8 +3,6 @@ import Client from '../client.js';
 import { auth } from './auth.js';
 import {Redirect} from 'react-router-dom'
 import {PieGraph} from './PieGraph.js'
-import ButtonToolbar from 'bootstrap'
-import ButtonGroup from 'bootstrap'
 import { NavMenu } from './NavMenu';
 import { NavMenu_LoggedIn } from './NavMenu_LoggedIn.js';
 import {ButtonGroup, Button} from 'react-bootstrap';
