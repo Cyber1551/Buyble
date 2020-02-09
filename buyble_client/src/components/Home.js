@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import Client from '../client.js';
+import {PieGraph} from './PieGraph';
+import { Redirect } from 'react-router-dom';
+import { ButtonToolbar, ButtonGroup} from 'bootstrap';
 
 export class Home extends Component {
     constructor(props) {
@@ -15,6 +18,13 @@ export class Home extends Component {
     productList() {
         console.log(this.state);
         this.setState({redirectProductList: true})
+    }
+
+    sendTestData()
+    {
+        Client.SendToServer("POST", "product_list", null, function(data) {
+            console.log(data)
+        })
     }
 
     render() {
@@ -35,19 +45,20 @@ export class Home extends Component {
                     <input type="date" id="dateTxt" placeholder="Date..." />
                     <input type="number" id="quantityTxt" placeholder="Quantity..." />
                     <input type="number" id="priceTxt" placeholder="Price..." />
-                    <button onClick={this.sendTestData}>Send</button>
+                    <ButtonToolbar aria-label="Toolbar with button groups">
+                        <ButtonGroup className="mr-2" aria-label="First group">
+                            <button onClick={this.sendTestData.bind(this)}>Send</button>
+                            <button onClick={this.productList.bind(this)}>Go to Product List</button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    
                     <PieGraph/>
-                    <button onClick={this.productList.bind(this)}>Go to Product List</button>
+                    
                 </div>
             )
         }
             
         
     }
-    sendTestData()
-    {
-        Client.SendToServer("POST", "product_list", null, function(data) {
-            console.log(data)
-        })
-    }
+    
 }
