@@ -20,6 +20,13 @@ export class Home extends Component {
         this.setState({redirectProductList: true})
     }
 
+    sendTestData()
+    {
+        Client.SendToServer("POST", "product_list", null, function(data) {
+            console.log(data)
+        })
+    }
+
     render() {
         if (this.state.redirectProductList === true) {
             console.log("redirecting!");
@@ -38,7 +45,13 @@ export class Home extends Component {
                     <input type="date" id="dateTxt" placeholder="Date..." />
                     <input type="number" id="quantityTxt" placeholder="Quantity..." />
                     <input type="number" id="priceTxt" placeholder="Price..." />
-                    <button onClick={this.sendTestData}>Send</button>
+                    <ButtonToolbar aria-label="Toolbar with button groups">
+                        <ButtonGroup className="mr-2" aria-label="First group">
+                            <button onClick={this.sendTestData.bind(this)}>Send</button>
+                            <button onClick={this.productList.bind(this)}>Go to Product List</button>
+                        </ButtonGroup>
+                    </ButtonToolbar>
+                    
                     <PieGraph/>
                     <button onClick={this.productList.bind(this)}>Go to Product List</button><br />
                 </div>
